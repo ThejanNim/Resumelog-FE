@@ -10,6 +10,20 @@ import {
 } from "@tanstack/react-table";
 import { useMemo, useReducer, useState } from "react";
 import Checkbox from "../../components/atoms/Checkbox/Checkbox";
+import { Button } from "../../components/atoms/Button/Button";
+import { Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/atoms/Dialog/Dialog";
+import { Input } from "../../components/atoms/Input/Input";
+import { Label } from "../../components/atoms/Label/Label";
 
 type Job = {
   id: number;
@@ -143,8 +157,81 @@ export default function JobTrackerPage() {
 
   return (
     <div>
-      <div className="flex items-center px-4 border-b border-[BBBBBB] h-[48px]">
-        All Jobs
+      <div className="flex items-center px-4 border-b border-[BBBBBB] h-[48px] justify-between">
+        <div>All Jobs</div>
+        <Dialog>
+          <form>
+            <DialogTrigger asChild>
+              <Button variant="default">
+                <Plus /> New Job
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[680px]">
+              <DialogHeader>
+                <DialogTitle>Add Job Application</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="position">Position</Label>
+                  <Input
+                    id="position"
+                    name="position"
+                    defaultValue="Software Engineer"
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="company">Company</Label>
+                  <Input id="company" name="company" defaultValue="@peduarte" />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="status">Status</Label>
+                  <Input id="status" name="status" defaultValue="Applied" />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="applicationDate">Application Date</Label>
+                  <Input
+                    id="applicationDate"
+                    name="applicationDate"
+                    defaultValue="2023-01-01"
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="interviewDate">Interview Date</Label>
+                  <Input
+                    id="interviewDate"
+                    name="interviewDate"
+                    defaultValue="2023-01-01"
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="country">Country</Label>
+                  <Input id="country" name="country" defaultValue="USA" />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="expectation">Expectation</Label>
+                  <Input
+                    id="expectation"
+                    name="expectation"
+                    defaultValue="$100,000 - $120,000"
+                  />
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="description">Description</Label>
+                  <Input
+                    id="description"
+                    name="description"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit">Save changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
       </div>
       <div className="flex items-center px-4 border-b border-[BBBBBB] h-[48px]">
         Sort
