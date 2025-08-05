@@ -8,7 +8,7 @@ import {
   type SortingFn,
   type SortingState,
 } from "@tanstack/react-table";
-import { useMemo, useReducer, useState } from "react";
+import { useMemo, useState } from "react";
 import Checkbox from "../../components/atoms/Checkbox/Checkbox";
 import { Button } from "../../components/atoms/Button/Button";
 import { Plus } from "lucide-react";
@@ -93,8 +93,6 @@ const sortStatusFn: SortingFn<Job> = (rowA, rowB, _columnId) => {
 export default function JobTrackerPage() {
   const navigate = useNavigate();
 
-  const rerender = useReducer(() => ({}), {})[1];
-
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const columns = useMemo<ColumnDef<Job>[]>(
@@ -115,13 +113,13 @@ export default function JobTrackerPage() {
       },
       {
         accessorKey: "applicationDate",
-        cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+        cell: (info) => new Date(info.getValue() as string).toLocaleDateString(),
       },
       {
         accessorKey: "interviewDate",
         cell: (info) =>
           info.getValue()
-            ? new Date(info.getValue()).toLocaleDateString()
+            ? new Date(info.getValue() as string).toLocaleDateString()
             : "N/A",
       },
       {
@@ -140,7 +138,7 @@ export default function JobTrackerPage() {
     []
   );
 
-  const [data, setData] = useState(jobs);
+  const [data] = useState(jobs);
 
   const table = useReactTable({
     columns,
