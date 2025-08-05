@@ -16,7 +16,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -217,10 +216,7 @@ export default function JobTrackerPage() {
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="description">Description</Label>
-                  <Input
-                    id="description"
-                    name="description"
-                  />
+                  <Input id="description" name="description" />
                 </div>
               </div>
               <DialogFooter>
