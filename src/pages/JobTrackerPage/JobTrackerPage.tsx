@@ -23,6 +23,7 @@ import {
 } from "../../components/atoms/Dialog/Dialog";
 import { Input } from "../../components/atoms/Input/Input";
 import { Label } from "../../components/atoms/Label/Label";
+import { useGetJobsByUserId } from "../../api/job";
 
 type Job = {
   id: number;
@@ -30,60 +31,13 @@ type Job = {
   company: string;
   status: string;
   applicationDate: string;
-  interviewDate?: string;
+  interviewDate: string;
   country: string;
   expectation: string;
   description: string;
 };
 
-const jobs: Job[] = [
-  {
-    id: 1,
-    position: "Software Engineer",
-    company: "Tech Corp",
-    status: "Applied",
-    applicationDate: "2023-01-15",
-    interviewDate: "2023-02-01",
-    country: "USA",
-    expectation: "Remote",
-    description: "Develop and maintain web applications.",
-  },
-  {
-    id: 2,
-    position: "Data Scientist",
-    company: "Data Solutions",
-    status: "Interviewed",
-    applicationDate: "2023-01-20",
-    interviewDate: "2023-02-05",
-    country: "Canada",
-    expectation: "On-site",
-    description: "Analyze data and build predictive models.",
-  },
-  {
-    id: 3,
-    position: "Product Manager",
-    company: "Innovate Inc.",
-    status: "Offered",
-    applicationDate: "2023-01-25",
-    interviewDate: "2023-02-10",
-    country: "UK",
-    expectation: "Hybrid",
-    description: "Lead product development and strategy.",
-  },
-  {
-    id: 4,
-    position: "UX Designer",
-    company: "Design Studio",
-    status: "Rejected",
-    applicationDate: "2023-01-30",
-    interviewDate: "2023-02-15",
-    country: "Australia",
-    expectation: "Remote",
-    description: "Create user-friendly designs and interfaces.",
-  },
-];
-
-const sortStatusFn: SortingFn<Job> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortingFn<Job> = (rowA, rowB) => {
   const statusA = rowA.original.status;
   const statusB = rowB.original.status;
   const statusOrder = ["single", "complicated", "relationship"];
@@ -92,6 +46,7 @@ const sortStatusFn: SortingFn<Job> = (rowA, rowB, _columnId) => {
 
 export default function JobTrackerPage() {
   const navigate = useNavigate();
+  const { data: jobs } = useGetJobsByUserId(10101);
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -100,7 +55,6 @@ export default function JobTrackerPage() {
       {
         accessorKey: "position",
         cell: (info) => info.getValue(),
-        //this column will sort in ascending order by default since it is a string column
       },
       {
         accessorKey: "company",
@@ -113,7 +67,8 @@ export default function JobTrackerPage() {
       },
       {
         accessorKey: "applicationDate",
-        cell: (info) => new Date(info.getValue() as string).toLocaleDateString(),
+        cell: (info) =>
+          new Date(info.getValue() as string).toLocaleDateString(),
       },
       {
         accessorKey: "interviewDate",
@@ -138,11 +93,26 @@ export default function JobTrackerPage() {
     []
   );
 
-  const [data] = useState(jobs);
+  const convertedJobs: Job[] = useMemo(() => {
+    return (jobs ?? []).map((job) => {
+      const data = job.data as Job; // Type assertion
+      return {
+        id: job.id,
+        position: data.position,
+        company: data.company,
+        status: data.status,
+        applicationDate: data.applicationDate,
+        interviewDate: data.interviewDate,
+        country: data.country,
+        expectation: data.expectation,
+        description: data.description,
+      };
+    });
+  }, [jobs]);
 
   const table = useReactTable({
     columns,
-    data,
+    data: convertedJobs,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
